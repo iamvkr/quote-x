@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
+    <script>
+        function confirmDelete() {
+            if (confirm('Are us sure to delete?')) {
+                return true;
+            }
+            return false;
+        }
+    </script>
+</head>
+
+<body>
+    <!-- navbar start -->
+    <nav class="p-2 w-full border-b-[2px] h-18">
+        <div class="brand flex md:mx-40">
+            <div class="icon w-9 h-9 border-red-700 rounded-full border-[2px] me-2 flex items-center justify-center">
+                <span class="text-2xl font-bold">Q</span>
+            </div>
+            <div class="title text-2xl">
+                Quote X
+            </div>
+        </div>
+    </nav>
+    <!-- navbar end -->
+
+    <!-- header start -->
+    <header>
+        <div class="text-center mt-4 text-2xl font-bold mb-4">
+            Dashboard
+            <!-- <button class="px-2 py-1 border-red-700 border-2 rounded-full"> Create Quotes</button> -->
+        </div>
+    </header>
+    <!-- header end -->
+
+    <!-- main section -->
+    <main class="flex w-full px-2 gap-2 justify-center flex-wrap">
+        <section class="md:w-[40vw] w-full min-h-[80vh] bg-red-200 pb-3">
+            <div class="flex justify-between p-2">
+                <h2 class="text-2xl">Welcome <%= email.split("@")[0] %> ,</h2>
+                <form action="/auth/logout" method="post">
+                    <button class="px-2 py-1 border-red-700 border-2 rounded-full hover:bg-red-700 hover:text-white">Logout</button>
+                </form>
+            </div>
+            <div class="m-2">
+                <h3 class="text-md">Create new Quote</h3>
+            </div>
+            <div class="px-3">
+                <form action="/quote/create" method="post">
+                    <textarea name="content" id="quoteContent" rows="5" placeholder="Enter Your Quote"
+                        class="h-40 max-h-40 w-full"></textarea>
+                    <div class="hidden" id="choose_background">
+                        <input type="text" name="background" value="bg_img (1).jpg">
+                    </div>
+                    <div class="w-full flex justify-end gap-x-2">
+                        <!-- <button class=" bg-red-700 ">Submit</button> -->
+                        <button class=" px-2 py-1 border-red-700 border-2 rounded-full hover:bg-red-700 hover:text-white "
+                            onclick="previewQuote(); return false;">Preview Quote</button>
+                        <button class=" px-2 py-1 border-red-700 border-2 rounded-full w-32 hover:bg-red-700 hover:text-white">Submit</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- TO BE IMPLEMENTED IN FUTURE -->
+            <!-- <form action="" class="mt-2">
+                <button class="block mx-auto px-2 py-1 border-red-700 border-2 rounded-full"> Generate Using AI</button>
+                </form> 
+                <div>
+                <p class="text-center">By using generate using AI, Will generate a quote</p>
+                </div> 
+            -->
+
+            <div class="mt-4">
+                <h3 class="text-center">Choose Your Background image</h3>
+                <div class="text-center m-3 flex justify-center items-center gap-x-2">
+                    <div class="w-64 h-52  border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 relative">
+                        <img id="quoteBgPreview" draggable="false"
+                            class="rounded-lg h-full w-full object-cover absolute top-0 left-0"
+                            src="/imgs/bg_img (1).jpg" alt="card image" />
+                        <div id="quoteContentPreview"
+                            class="absolute left-0 top-0 h-full rounded-lg w-full bg-black/30 flex items-center justify-center text-white text-center">
+                            Quote goes here!
+                        </div>
+                    </div>
+                    <!-- preview cards -->
+                    <!-- <div class="card md:w-48 w-full mx-2 md:mx-0 border-red-700 border-2 rounded-md shadow relative">
+                        <img src="/imgs/bg_img (1).jpg" class="w-full h-52 overflow-hidden object-cover rounded-md"
+                            alt="" id="quoteBgPreview">
+                        <div class="absolute left-0 top-0 h-52 w-full bg-black/30 flex items-center justify-center text-white overflow-hidden"
+                            id="quoteContentPreview">
+                            Quote goes here!
+                        </div>
+                    </div> -->
+                    <!-- preview card end -->
+                </div>
+                <h3 class="text-center text-sm my-2">preview Quote</h3>
+                <div class="grid grid-cols-4 justify-center w-80 align-center mx-auto gap-2">
+                    <% for(i=1;i<=12; i++){ %>
+                        <% if(i==1){ %>
+                            <div class="bg_selector color w-10 h-10 ring-offset-2 ring-2 ring-red-700"
+                                style="background-image: url('/imgs/bg_img (<%= i %>).jpg');"
+                                onclick="selectBg('<%= i %>')"></div>
+                            <% }else{ %>
+                                <div class="bg_selector color w-10 h-10"
+                                    style="background-image: url('/imgs/bg_img (<%= i %>).jpg');"
+                                    onclick="selectBg('<%= i %>')"></div>
+                                <% } %>
+                                    <% } %>
+                </div>
+            </div>
+        </section>
+        <section class="md:w-[55vw] w-full min-h-[80vh] bg-red-200 pb-3">
+            <h2 class="text-2xl m-2">Your Quotes,</h2>
+            <div class="m-2">
+                <h3 class="text-md">All your previously generated Quotes Appear Here</h3>
+            </div>
+            <div class="cards-container w-full flex flex-wrap gap-3 px-1">
+                <% if(user.quotes.length <=0){ %>
+                    <div class="text-center">No Quotes Yet!!</div>
+                    <% }else{ %>
+                        <% for(i=(user.quotes.length -1) ; i>= 0 ; i--){ %>
+                            <!-- new card -->
+                            <div class="mx-auto md:mx-0">
+                                <div id="cards-<%= i %>"
+                                    class="w-64 h-52  border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 relative">
+                                    <img draggable="false"
+                                        class="rounded-lg h-full w-full object-cover absolute top-0 left-0"
+                                        src="/imgs/<%= user.quotes[i].background %>" alt="card image" />
+                                    <div
+                                        class="absolute left-0 top-0 h-full rounded-lg w-full bg-black/30 flex items-center justify-center text-white text-center">
+                                        <%= user.quotes[i].content %>
+                                    </div>
+                                </div>
+                                <!-- download btn: -->
+                                <div class="text-center mt-1">
+                                    <button onclick="downloadImage('<%= i %>','<%= user.quotes[i].content.slice(0,10) %>')"
+                                        class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
+                                        Download
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="1.5" stroke="currentColor" class="w-4 h-4 ms-2"
+                                            onclick="downloadImage('<%= i %>','<%= user.quotes[i].content.slice(0,10) %>')">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                                        </svg>
+                                    </button>
+                                    <!-- delete btn -->
+                                    <form action="/quote/delete/<%= user.quotes[i]._id %>" method="post" class="inline-flex">
+                                        <button onclick="return confirmDelete();"
+                                            class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
+                                            Delete
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                stroke-width="1.5" stroke="currentColor" class="w-4 h-4 ms-2">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                            </svg>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                            <!-- new card end -->
+
+                            <% } %>
+                                <% } %>
+
+            </div>
+        </section>
+    </main>
+    <!-- main section end -->
+    <script src="/js/main.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <!-- navbar start -->
+    <nav class="p-2 w-full border-b-[2px] h-18">
+        <div class="brand flex md:mx-40">
+            <div class="icon w-9 h-9 border-red-700 rounded-full border-[2px] me-2 flex items-center justify-center">
+                    <span class="text-2xl font-bold">Q</span>
+            </div>
+            <div class="title text-2xl">
+                Quote X
+            </div>
+        </div>
+    </nav>
+    <!-- navbar end -->
+
+    <!-- header start -->
+    <header>
+        <div class="text-center mt-4 text-2xl font-bold mb-4">
+            <span id="login-header" class="">Login To Your account</span>
+            <span id="signup-header" class="hidden">Signup Your account</span>
+        </div>
+    </header>
+    <!-- header end -->
+
+    <!-- main section -->
+    <main>
+        <section class="md:mx-40">
+            <div id="login-form">
+                <form action="/auth/login" method="post" class="flex flex-col md:mx-10 gap-3 items-center mx-4 md:mx-0">
+                    <input class="w-full md:w-80 outline-none border-red-700 rounded-full border-2 px-2 py-1" type="text" name="email" id="email" placeholder="Enter your email">
+                    <input class="w-full md:w-80 outline-none border-red-700 rounded-full border-2 px-2 py-1" type="text" name="password" id="password" placeholder="Enter your password">
+                    <button class="w-full md:w-80 outline-none border-red-700 rounded-full border-2 px-2 py-1 hover:bg-red-700 hover:text-white" type="submit">Login</button>
+                </form>
+                <div class="mt-10 text-center">
+                    Do not have have account? <button onclick="switchToSignup()" class="underline font-bold">Signup</button>
+                </div>
+            </div>
+            <div id="signup-form" class="hidden">
+                <form  action="/auth/signup" method="post" class="flex flex-col md:mx-10 gap-3 items-center mx-4 md:mx-0">
+                    <input class="w-full md:w-80 outline-none border-red-700 rounded-full border-2 px-2 py-1" type="text" name="email" id="email" placeholder="Enter your email">
+                    <input class="w-full md:w-80 outline-none border-red-700 rounded-full border-2 px-2 py-1" type="text" name="password" id="password" placeholder="Enter your password">
+                    <input class="w-full md:w-80 outline-none border-red-700 rounded-full border-2 px-2 py-1" type="text" name="confirm_password" id="confirm_password" placeholder="Confirm your password">
+                    <button class="w-full md:w-80 outline-none border-red-700 rounded-full border-2 px-2 py-1 hover:bg-red-700 hover:text-white" type="submit">Signup</button>
+                </form>
+                <div class="mt-10 text-center">
+                    Already have account? <button onclick="switchToLogin()" class="underline font-bold">Login</button>
+                </div>
+            </div>
+        </section>
+    </main>
+    <!-- main section end -->
+
+    <script src="/js/main.js"></script>
+</body>
+</html>
