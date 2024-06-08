@@ -34,3 +34,7 @@ Start the server
 ## Config
 Make sure to configure your keys in .env
 
+## AI version
+(currently not under opensource)
+
+![App Screenshot](https://raw.githubusercontent.com/iamvkr/quote-x/main/Dashboard-ai.png)
